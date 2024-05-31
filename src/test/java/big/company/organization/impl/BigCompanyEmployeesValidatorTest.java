@@ -60,4 +60,17 @@ class BigCompanyEmployeesValidatorTest {
         assertDoesNotThrow(() -> bigCompanyEmployeesValidator.validate(employees));
     }
 
+    @DisplayName("When there is no an employee in the list with the given managerId, should throw an exception")
+    @Test
+    void shouldThrowExceptionWhenManagerIdDoesNotExist() {
+        List<Employee> employees = List.of(
+                new Employee(1, "John1", "Doe", 1000, null),
+                new Employee(2, "John2", "Doe", 1000, 1L),
+                new Employee(3, "John3", "Doe", 1000, 1000L)
+        );
+
+        assertThrows(IllegalStateException.class, () -> bigCompanyEmployeesValidator.validate(employees));
+    }
+
+
 }

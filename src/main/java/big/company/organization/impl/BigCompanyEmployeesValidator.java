@@ -3,10 +3,7 @@ package big.company.organization.impl;
 import big.company.model.Employee;
 import big.company.organization.OrganizationEmployeesValidator;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BigCompanyEmployeesValidator implements OrganizationEmployeesValidator {
@@ -15,6 +12,21 @@ public class BigCompanyEmployeesValidator implements OrganizationEmployeesValida
         validateEmployeesNotEmpty(employees);
         validateExactlyOneCeo(employees);
         validateIdsUnique(employees);
+        validateManagerIdsAreExistingEmployees(employees);
+    }
+
+    private void validateManagerIdsAreExistingEmployees(Collection<Employee> employees) {
+        final Set<Long> employeeIds = employees.stream()
+                .map(Employee::id)
+                .collect(Collectors.toSet());
+        List<Long> nonExistentManagerIds = employees.stream()
+                .map(Employee::managerId)
+                .distinct()
+                .filter(managerId -> !employeeIds.contains(managerId))
+                .toList();
+        if (!nonExistentManagerIds.isEmpty()) {
+            throw new IllegalStateException("Manager id does not reference any of the employees. Ids: " + nonExistentManagerIds);
+        }
     }
 
     private void validateEmployeesNotEmpty(Collection<Employee> employees) {
