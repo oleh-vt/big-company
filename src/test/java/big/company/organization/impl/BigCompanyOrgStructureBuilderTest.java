@@ -1,6 +1,7 @@
 package big.company.organization.impl;
 
 import big.company.model.Employee;
+import big.company.organization.OrganizationEmployeesValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +16,12 @@ class BigCompanyOrgStructureBuilderTest {
 
     private BigCompanyOrgStructureBuilder bigCompanyOrgStructureBuilder;
 
+    private final OrganizationEmployeesValidator validatorStub = employees -> {
+    };
+
     @BeforeEach
     void setUp() {
-        bigCompanyOrgStructureBuilder = new BigCompanyOrgStructureBuilder();
+        bigCompanyOrgStructureBuilder = new BigCompanyOrgStructureBuilder(validatorStub);
     }
 
     @DisplayName("Should create organization from the employees list")
