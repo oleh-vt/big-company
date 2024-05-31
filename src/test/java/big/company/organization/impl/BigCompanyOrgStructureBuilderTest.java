@@ -1,28 +1,20 @@
 package big.company.organization.impl;
 
 import big.company.model.Employee;
-import big.company.organization.OrganizationEmployeesValidator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BigCompanyOrgStructureBuilderTest {
 
     private BigCompanyOrgStructureBuilder bigCompanyOrgStructureBuilder;
-
-    private final OrganizationEmployeesValidator validatorStub = employees -> {
-    };
-
-    @BeforeEach
-    void setUp() {
-        bigCompanyOrgStructureBuilder = new BigCompanyOrgStructureBuilder(validatorStub);
-    }
 
     @DisplayName("Should create organization from the employees list")
     @Test
@@ -48,6 +40,8 @@ class BigCompanyOrgStructureBuilderTest {
                 e5.id(), e5,
                 e6.id(), e6
         );
+        bigCompanyOrgStructureBuilder = new BigCompanyOrgStructureBuilder(e -> {
+        });
 
         var expectedOrganization = new BigCompanyOrganization(employeesById, orgStructure);
 
@@ -56,5 +50,20 @@ class BigCompanyOrgStructureBuilderTest {
         assertEquals(bigCompanyOrganization, expectedOrganization);
     }
 
+    @DisplayName("Should create organization from the employees list")
+    @Test
+    void shouldInvokeEmployeeValidatorBefore() {
+        final AtomicBoolean invoked = new AtomicBoolean(false);
+        bigCompanyOrgStructureBuilder = new BigCompanyOrgStructureBuilder(e -> invoked.set(true));
+
+        List<Employee> employees = List.of(
+                new Employee(1, "John1", "Doe", 1000, null),
+                new Employee(2, "John2", "Doe", 1000, 1L)
+        );
+
+        bigCompanyOrgStructureBuilder.build(employees);
+
+        assertTrue(invoked.get());
+    }
 
 }
