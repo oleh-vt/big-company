@@ -1,6 +1,6 @@
 package big.company.model;
 
-public record EmployeeDto(
+public record Employee(
         long id,
         String firstName,
         String lastName,

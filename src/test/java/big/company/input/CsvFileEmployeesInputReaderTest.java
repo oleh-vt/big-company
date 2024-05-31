@@ -1,6 +1,6 @@
-package big.company.parser;
+package big.company.input;
 
-import big.company.model.EmployeeDto;
+import big.company.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,12 +40,12 @@ class CsvFileEmployeesInputReaderTest {
     @Test
     void shouldReadEmployeeWithAllFieldsSet() {
         prepareCsvFile("124 , Martin, Chekov, 45000, 123");
-        var expectedEmployeeDto = new EmployeeDto(124, "Martin", "Chekov", 45000, 123L);
+        var expectedEmployeeDto = new Employee(124, "Martin", "Chekov", 45000, 123L);
 
-        List<EmployeeDto> employeeDtos = employeesInputReader.read();
+        List<Employee> employees = employeesInputReader.read();
 
-        assertEquals(employeeDtos.size(), 1);
-        assertEquals(employeeDtos.get(0), expectedEmployeeDto);
+        assertEquals(employees.size(), 1);
+        assertEquals(employees.get(0), expectedEmployeeDto);
     }
 
     @DisplayName("Should skip blank lines")
@@ -55,24 +55,24 @@ class CsvFileEmployeesInputReaderTest {
                 
                 124 , Martin, Chekov, 45000, 123
                 """);
-        var expectedEmployeeDto = new EmployeeDto(124, "Martin", "Chekov", 45000, 123L);
+        var expectedEmployeeDto = new Employee(124, "Martin", "Chekov", 45000, 123L);
 
-        List<EmployeeDto> employeeDtos = employeesInputReader.read();
+        List<Employee> employees = employeesInputReader.read();
 
-        assertEquals(employeeDtos.size(), 1);
-        assertEquals(employeeDtos.get(0), expectedEmployeeDto);
+        assertEquals(employees.size(), 1);
+        assertEquals(employees.get(0), expectedEmployeeDto);
     }
 
     @DisplayName("Should parse employee when managerId field is not set")
     @Test
     void shouldReadEmployeeWhenManagerIdFieldIsNotSet() {
         prepareCsvFile("123, Joe, Doe, 60000, ");
-        var expectedEmployeeDto = new EmployeeDto(123, "Joe", "Doe", 60000, null);
+        var expectedEmployeeDto = new Employee(123, "Joe", "Doe", 60000, null);
 
-        List<EmployeeDto> employeeDtos = employeesInputReader.read();
+        List<Employee> employees = employeesInputReader.read();
 
-        assertEquals(employeeDtos.size(), 1);
-        assertEquals(employeeDtos.get(0), expectedEmployeeDto);
+        assertEquals(employees.size(), 1);
+        assertEquals(employees.get(0), expectedEmployeeDto);
     }
 
     @DisplayName("When any of the required fields is blank, should throw an exception")

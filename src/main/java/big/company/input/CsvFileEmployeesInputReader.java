@@ -1,12 +1,14 @@
-package big.company.parser;
+package big.company.input;
 
-import big.company.model.EmployeeDto;
+import big.company.model.Employee;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
+
+//TODO: split the file load and parsing
 
 public class CsvFileEmployeesInputReader implements EmployeesInputReader {
 
@@ -25,7 +27,7 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
         this.filePath = filePath;
     }
 
-    public List<EmployeeDto> read() {
+    public List<Employee> read() {
         try (Stream<String> lines = Files.lines(filePath)) {
             return lines
                     .filter(line -> !line.isBlank())
@@ -37,7 +39,7 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
         }
     }
 
-    private EmployeeDto parseEmployeeDto(String csvRow) {
+    private Employee parseEmployeeDto(String csvRow) {
         String[] row = csvRow.split(COMMA, -1);
         validate(row);
         return parse(row);
@@ -62,8 +64,8 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
         }
     }
 
-    private EmployeeDto parse(String[] row) {
-        return new EmployeeDto(parseId(row), parseFirstName(row), parseLastName(row), parseSalary(row), parseManagerId(row));
+    private Employee parse(String[] row) {
+        return new Employee(parseId(row), parseFirstName(row), parseLastName(row), parseSalary(row), parseManagerId(row));
     }
 
     private long parseId(String[] row) {
