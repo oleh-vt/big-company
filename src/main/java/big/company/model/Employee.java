@@ -4,7 +4,7 @@ public record Employee(
         long id,
         String firstName,
         String lastName,
-        double salary,
+        long salary,
         Long managerId
 ) {
 }

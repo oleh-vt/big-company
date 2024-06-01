@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class CsvFileEmployeesInputReader implements EmployeesInputReader {
 
-    private static final int COLUMN_NUMBER = 5;
+    private static final int COLUMNS_NUMBER = 5;
     private static final String COMMA = ",";
 
     private final Path filePath;
@@ -51,8 +51,8 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
     }
 
     private void validateRowComplete(String[] row) {
-        if (row.length < COLUMN_NUMBER) {
-            throw new IllegalStateException("Row is invalid. Expected %d columns, but was %d".formatted(COLUMN_NUMBER, row.length));
+        if (row.length < COLUMNS_NUMBER) {
+            throw new IllegalStateException("Row is invalid. Expected %d columns, but was %d".formatted(COLUMNS_NUMBER, row.length));
         }
     }
 
@@ -80,8 +80,8 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
         return row[ColumnIndex.LAST_NAME].strip();
     }
 
-    private double parseSalary(String[] row) {
-        return Double.parseDouble(row[ColumnIndex.SALARY].strip());
+    private long parseSalary(String[] row) {
+        return Long.parseLong(row[ColumnIndex.SALARY].strip());
     }
 
     private Long parseManagerId(String[] row) {
