@@ -1,4 +1,4 @@
-package big.company.model;
+package big.company.organization;
 
 public record Employee(
     Long id,

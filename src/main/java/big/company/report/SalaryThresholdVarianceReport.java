@@ -1,6 +1,5 @@
 package big.company.report;
 
-import big.company.output.OutputWriter;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -22,8 +21,8 @@ public final class SalaryThresholdVarianceReport {
     entries.add(new Entry(employeeId, firstName, lastName, salaryThresholdVariance));
   }
 
-  public Report export() {
-    return new Report(TITLE, createDataTable());
+  public PrintableReport export() {
+    return new PrintableReport(TITLE, createDataTable());
   }
 
 

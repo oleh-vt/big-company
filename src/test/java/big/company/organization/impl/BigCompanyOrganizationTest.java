@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import big.company.report.ReportingLineExcessLengthReport;
 import big.company.report.SalaryThresholdVarianceReport;
-import big.company.model.Employee;
+import big.company.organization.Employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

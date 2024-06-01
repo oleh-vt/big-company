@@ -2,7 +2,7 @@ package big.company.output;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import big.company.report.Report;
+import big.company.report.PrintableReport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class ConsoleTableFormatterTest {
     data[2] = new String[]{"2", "a bit shorter value", "maybe"};
     String title = "TABLE TITLE";
 
-    var report = new Report(title, data);
+    var report = new PrintableReport(title, data);
 
     var expectedTable = title + CR
         + "  COLUMN1    COLUMN2                         COLUMN3  " + CR

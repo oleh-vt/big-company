@@ -1,6 +1,6 @@
 package big.company.organization.impl;
 
-import big.company.model.Employee;
+import big.company.organization.Employee;
 import big.company.organization.OrganizationEmployeesValidator;
 import big.company.organization.OrganizationStructureBuilder;
 

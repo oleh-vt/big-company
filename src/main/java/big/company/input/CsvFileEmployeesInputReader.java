@@ -1,13 +1,11 @@
 package big.company.input;
 
-import big.company.model.Employee;
+import big.company.organization.Employee;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
-
-//TODO: split the file load and parsing
 
 public class CsvFileEmployeesInputReader implements EmployeesInputReader {
 

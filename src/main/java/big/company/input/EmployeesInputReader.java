@@ -1,6 +1,6 @@
 package big.company.input;
 
-import big.company.model.Employee;
+import big.company.organization.Employee;
 import java.nio.file.Path;
 import java.util.List;
 

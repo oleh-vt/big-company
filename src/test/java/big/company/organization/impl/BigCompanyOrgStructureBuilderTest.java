@@ -3,7 +3,7 @@ package big.company.organization.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import big.company.model.Employee;
+import big.company.organization.Employee;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

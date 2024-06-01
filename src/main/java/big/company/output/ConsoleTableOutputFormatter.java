@@ -1,6 +1,6 @@
 package big.company.output;
 
-import big.company.report.Report;
+import big.company.report.PrintableReport;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -12,7 +12,7 @@ public class ConsoleTableOutputFormatter implements ConsoleOutputFormatter {
   private static final String BLANK_SPACE = "  ";
 
   @Override
-  public String format(Report report) {
+  public String format(PrintableReport report) {
     return report.title()
         + System.lineSeparator()
         + buildTablePresentation(report.dataTable());
