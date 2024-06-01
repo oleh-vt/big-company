@@ -1,7 +1,7 @@
 package big.company.organization.impl;
 
-import big.company.analyze.report.ReportingLineExcessLengthReport;
-import big.company.analyze.report.SalaryThresholdVarianceReport;
+import big.company.report.ReportingLineExcessLengthReport;
+import big.company.report.SalaryThresholdVarianceReport;
 import big.company.model.Employee;
 import big.company.organization.Organization;
 import java.math.BigDecimal;

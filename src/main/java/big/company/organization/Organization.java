@@ -1,7 +1,7 @@
 package big.company.organization;
 
-import big.company.analyze.report.ReportingLineExcessLengthReport;
-import big.company.analyze.report.SalaryThresholdVarianceReport;
+import big.company.report.ReportingLineExcessLengthReport;
+import big.company.report.SalaryThresholdVarianceReport;
 
 public interface Organization {
 
