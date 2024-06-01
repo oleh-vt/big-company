@@ -4,7 +4,7 @@ import big.company.report.Report;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ConsoleTableFormatter implements ConsoleFormatter {
+public class ConsoleTableOutputFormatter implements ConsoleOutputFormatter {
 
   private static final String ALIGN_LEFT = "%-";
   private static final String STR = "s";

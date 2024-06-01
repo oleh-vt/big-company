@@ -4,15 +4,15 @@ import big.company.report.Report;
 
 public class SystemStandardOutputWriter implements OutputWriter {
 
-  private final ConsoleFormatter consoleFormatter;
+  private final ConsoleOutputFormatter consoleOutputFormatter;
 
-  public SystemStandardOutputWriter(ConsoleFormatter consoleFormatter) {
-    this.consoleFormatter = consoleFormatter;
+  public SystemStandardOutputWriter(ConsoleOutputFormatter consoleOutputFormatter) {
+    this.consoleOutputFormatter = consoleOutputFormatter;
   }
 
   @Override
   public void write(Report report) {
-    System.out.print(consoleFormatter.format(report));
+    System.out.print(consoleOutputFormatter.format(report));
   }
 
 }

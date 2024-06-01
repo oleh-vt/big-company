@@ -10,7 +10,7 @@ class ConsoleTableFormatterTest {
 
   private static final String CR =  System.lineSeparator();
 
-  private final ConsoleFormatter consoleFormatter = new ConsoleTableFormatter();
+  private final ConsoleOutputFormatter consoleOutputFormatter = new ConsoleTableOutputFormatter();
 
   @DisplayName("Should create a well-formatted table with the title")
   @Test
@@ -28,7 +28,7 @@ class ConsoleTableFormatterTest {
         + "  1          very long value in this cell    yes      " + CR
         + "  2          a bit shorter value             maybe    " + CR;
 
-    String table = consoleFormatter.format(report);
+    String table = consoleOutputFormatter.format(report);
 
     assertEquals(expectedTable, table);
 

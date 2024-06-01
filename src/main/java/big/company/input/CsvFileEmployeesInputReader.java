@@ -14,19 +14,9 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
   private static final int COLUMNS_NUMBER = 5;
   private static final String COMMA = ",";
 
-  private final Path filePath;
-
-  public CsvFileEmployeesInputReader(Path filePath) {
-    if (Files.notExists(filePath)) {
-      throw new IllegalArgumentException("File does not exist: " + filePath);
-    }
-    if (Files.isDirectory(filePath)) {
-      throw new IllegalArgumentException("The specified path should be a file, but was a directory: " + filePath);
-    }
-    this.filePath = filePath;
-  }
-
-  public List<Employee> read() {
+  @Override
+  public List<Employee> read(Path filePath) {
+    validateFile(filePath);
     try (Stream<String> lines = Files.lines(filePath)) {
       return lines
           .filter(line -> !line.isBlank())
@@ -35,6 +25,15 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
           .toList();
     } catch (IOException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  private void validateFile(Path filePath) {
+    if (Files.notExists(filePath)) {
+      throw new IllegalArgumentException("File does not exist: " + filePath);
+    }
+    if (Files.isDirectory(filePath)) {
+      throw new IllegalArgumentException("The specified path should be a file, but was a directory: " + filePath);
     }
   }
 
