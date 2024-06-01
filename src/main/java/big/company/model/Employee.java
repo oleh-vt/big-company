@@ -1,10 +1,11 @@
 package big.company.model;
 
 public record Employee(
-        long id,
-        String firstName,
-        String lastName,
-        long salary,
-        Long managerId
+    Long id,
+    String firstName,
+    String lastName,
+    Long salary,
+    Long managerId
 ) {
+
 }

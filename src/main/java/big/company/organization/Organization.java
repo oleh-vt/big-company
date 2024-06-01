@@ -1,11 +1,11 @@
 package big.company.organization;
 
-import big.company.organization.impl.BigCompanyOrganization;
-
-import java.util.List;
+import big.company.analyze.report.ReportingLineExcessLengthReport;
+import big.company.analyze.report.SalaryThresholdVarianceReport;
 
 public interface Organization {
-    List<BigCompanyOrganization.SalaryAnalysisResult> analyzeManagerSalaries();
 
-    List<BigCompanyOrganization.StructureAnalysisReport> analyzeStructure();
+  SalaryThresholdVarianceReport analyzeManagerSalaries();
+
+  ReportingLineExcessLengthReport analyzeReportingLinesLength();
 }

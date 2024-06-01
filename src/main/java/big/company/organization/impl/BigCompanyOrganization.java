@@ -1,10 +1,15 @@
 package big.company.organization.impl;
 
+import big.company.analyze.report.ReportingLineExcessLengthReport;
+import big.company.analyze.report.SalaryThresholdVarianceReport;
 import big.company.model.Employee;
 import big.company.organization.Organization;
-
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 public class BigCompanyOrganization implements Organization {
 
@@ -23,15 +28,14 @@ public class BigCompanyOrganization implements Organization {
   }
 
   @Override
-  public List<SalaryAnalysisResult> analyzeManagerSalaries() {
-    List<SalaryAnalysisResult> results = new ArrayList<>();
+  public SalaryThresholdVarianceReport analyzeManagerSalaries() {
+    var report = new SalaryThresholdVarianceReport();
     for (Long managerId : subordinatesByManager.keySet()) {
-      Employee manager = getManager(managerId);
+      Employee manager = getEmployee(managerId);
       calculateSalaryThresholdVariance(managerId, manager.salary())
-          .map(v -> new SalaryAnalysisResult(manager.id(), manager.firstName(), manager.lastName(), v.doubleValue()))
-          .ifPresent(results::add);
+          .ifPresent(variance -> report.addEntry(manager.id(), manager.firstName(), manager.lastName(), variance.doubleValue()));
     }
-    return List.copyOf(results);
+    return report;
   }
 
   private Optional<BigDecimal> calculateSalaryThresholdVariance(long managerId, long salary) {
@@ -39,10 +43,11 @@ public class BigCompanyOrganization implements Organization {
         calculateSubordinateAverageSalary(getSubordinateIds(managerId)));
   }
 
-  private Employee getManager(Long managerId) {
-    return employeeById.get(managerId);
+  private Employee getEmployee(Long id) {
+    return employeeById.get(id);
   }
-// consider implementing this using range class that returns variance from the range
+
+  // consider implementing this using range class that returns variance from the range
   private Optional<BigDecimal> calculateVariance(long salary, double average) {
     BigDecimal actualSalary = BigDecimal.valueOf(salary);
     BigDecimal avg = BigDecimal.valueOf(average);
@@ -62,27 +67,21 @@ public class BigCompanyOrganization implements Organization {
   }
 
   @Override
-  public List<StructureAnalysisReport> analyzeStructure() {
-    List<StructureAnalysisReport> reports = new ArrayList<>();
-    analyzeOrgStructure(getCeoId(), 0, reports);
-    return reports;
+  public ReportingLineExcessLengthReport analyzeReportingLinesLength() {
+    var report = new ReportingLineExcessLengthReport();
+    analyze(getCeoId(), 0, report);
+    return report;
   }
 
-  private void analyzeOrgStructure(long id, int depth, List<StructureAnalysisReport> reports) {
+  private void analyze(long id, int depth, ReportingLineExcessLengthReport report) {
     int currentLength = depth - 1;
     if (currentLength > MAX_REPORTING_LINE_LENGTH) {
-      reports.add(new StructureAnalysisReport(getManager(id), currentLength));
+      Employee manager = getEmployee(id);
+      report.addEntry(manager.id(), manager.firstName(), manager.lastName(), currentLength - MAX_REPORTING_LINE_LENGTH);
     }
-    if (hasSubordinates(id)) {
-      getSubordinateIds(id)
-          .forEach(subordinateId -> analyzeOrgStructure(subordinateId, depth + 1, reports));
-    }
-
+    getSubordinateIds(id).forEach(subordinateId -> analyze(subordinateId, depth + 1, report));
   }
 
-  private boolean hasSubordinates(long id) {
-    return subordinatesByManager.containsKey(id);
-  }
 
   private long getCeoId() {
     return employeeById.values().stream()
@@ -120,17 +119,11 @@ public class BigCompanyOrganization implements Organization {
     return Objects.hash(employeeById, subordinatesByManager);
   }
 
-  public record SalaryAnalysisResult(
-      long employeeId,
-      String firstName,
-      String lastName,
-      double salaryDelta
-  ) {
-
+  @Override
+  public String toString() {
+    return "BigCompanyOrganization{\n" +
+        "employeeById=" + employeeById +
+        "\nsubordinatesByManager=" + subordinatesByManager +
+        "\n}";
   }
-
-  public record StructureAnalysisReport(Employee employee, int distance) {
-
-  }
-
 }
