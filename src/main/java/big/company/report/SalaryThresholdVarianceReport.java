@@ -1,16 +1,20 @@
 package big.company.report;
 
 import big.company.output.OutputWriter;
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public final class SalaryThresholdVarianceReport implements Printable {
+public final class SalaryThresholdVarianceReport {
 
-  private static final List<String> HEADER_ROW = List.of(
-      "Manager Id", "First Name", "Last Name", "Salary threshold variance"
-  );
+  private static final String UNDERPAID = "Underpaid";
+  private static final String OVERPAID = "Overpaid";
+  private static final String NONE = "";
+
+  private static final String TITLE = "MANAGERS WHICH EARN LESS OR MORE THAN THEY SHOULD";
+  private static final String[] HEADER_ROW = {"ID", "FIRST NAME", "LAST NAME", "MISPAYMENT", "VARIANCE"};
 
   private final List<Entry> entries = new LinkedList<>();
 
@@ -18,19 +22,48 @@ public final class SalaryThresholdVarianceReport implements Printable {
     entries.add(new Entry(employeeId, firstName, lastName, salaryThresholdVariance));
   }
 
-  @Override
-  public void print(OutputWriter writer) {
-    List<List<?>> rows = new ArrayList<>();
-    rows.add(HEADER_ROW);
-    entries.forEach(e -> {
-      List<Object> row = new ArrayList<>();
-      row.add(e.employeeId());
-      row.add(e.firstName());
-      row.add(e.lastName());
-      row.add(e.salaryThresholdVariance());
-      rows.add(row);
-    });
-    writer.write(rows);
+  public Report export() {
+    return new Report(TITLE, createDataTable());
+  }
+
+
+  private Object[][] createDataTable() {
+    Object[][] dataTable = new Object[entries.size() + 1][];
+    addHeaderRow(dataTable);
+    for (int rowNumber = 1; rowNumber < dataTable.length; rowNumber++) {
+      addRow(dataTable, rowNumber, createRow(entries.get(rowNumber - 1)));
+    }
+    return dataTable;
+  }
+
+  private void addHeaderRow(Object[][] dataTable) {
+    dataTable[0] = Arrays.copyOf(HEADER_ROW, HEADER_ROW.length);
+  }
+
+  private void addRow(Object[][] dataTable, int rowNumber, Object[] row) {
+    dataTable[rowNumber] = row;
+  }
+
+  private Object[] createRow(Entry entry) {
+    return new Object[]{
+        entry.employeeId(),
+        entry.firstName(),
+        entry.lastName(),
+        getMispayment(entry.salaryThresholdVariance()),
+        Math.abs(entry.salaryThresholdVariance())
+    };
+  }
+
+  private String getMispayment(double variance) {
+    int sign = BigDecimal.valueOf(variance).signum();
+    if (sign == 0) {
+      return NONE;
+    }
+    if (sign > 0) {
+      return OVERPAID;
+    } else {
+      return UNDERPAID;
+    }
   }
 
   @Override

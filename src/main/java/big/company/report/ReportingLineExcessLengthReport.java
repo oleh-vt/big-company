@@ -1,16 +1,14 @@
 package big.company.report;
 
-import big.company.output.OutputWriter;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public final class ReportingLineExcessLengthReport implements Printable {
+public final class ReportingLineExcessLengthReport {
 
-  private static final List<String> HEADER_ROW = List.of(
-      "Manager Id", "First Name", "Last Name", "Reporting Line Excess"
-  );
+  private static final String TITLE = "EMPLOYEES WITH TOO LONG REPORTING LINE";
+  private static final String[] HEADER_ROW = {"ID", "FIRST NAME", "LAST NAME", "REPORTING LINE EXCESS"};
 
   private final List<Entry> entries = new LinkedList<>();
 
@@ -18,19 +16,34 @@ public final class ReportingLineExcessLengthReport implements Printable {
     entries.add(new Entry(employeeId, firstName, lastName, reportingLineExcessLength));
   }
 
-  @Override
-  public void print(OutputWriter writer) {
-    List<List<?>> rows = new ArrayList<>();
-    rows.add(HEADER_ROW);
-    entries.forEach(e -> {
-      List<String> row = new ArrayList<>();
-      row.add(String.valueOf(e.employeeId()));
-      row.add(e.firstName());
-      row.add(e.lastName());
-      row.add(String.valueOf(e.reportingLineExcessLength()));
-      rows.add(row);
-    });
-    writer.write(rows);
+  public Report export() {
+    return new Report(TITLE, createDataTable());
+  }
+
+  private Object[][] createDataTable() {
+    Object[][] dataTable = new Object[entries.size() + 1][];
+    addHeaderRow(dataTable);
+    for (int rowNumber = 1; rowNumber < dataTable.length; rowNumber++) {
+      addRow(dataTable, rowNumber, createRow(entries.get(rowNumber - 1)));
+    }
+    return dataTable;
+  }
+
+  private void addHeaderRow(Object[][] dataTable) {
+    dataTable[0] = Arrays.copyOf(HEADER_ROW, HEADER_ROW.length);
+  }
+
+  private void addRow(Object[][] dataTable, int rowNumber, Object[] row) {
+    dataTable[rowNumber] = row;
+  }
+
+  private Object[] createRow(Entry entry) {
+    return new Object[]{
+        entry.employeeId(),
+        entry.firstName(),
+        entry.lastName(),
+        entry.reportingLineExcessLength()
+    };
   }
 
   @Override

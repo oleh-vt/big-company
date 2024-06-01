@@ -2,8 +2,8 @@ package big.company.output;
 
 import big.company.report.Report;
 
-public interface OutputWriter {
+public interface ConsoleFormatter {
 
-  void write(Report report);
+  String format(Report report);
 
 }
