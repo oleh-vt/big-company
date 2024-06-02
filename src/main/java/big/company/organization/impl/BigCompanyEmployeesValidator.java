@@ -15,7 +15,7 @@ public class BigCompanyEmployeesValidator implements OrganizationEmployeesValida
   private static final String INVALID_MANAGER_ID_REFERENCE_MESSAGE = "Manager id does not reference any of the employees. Ids: %s";
   private static final String NO_EMPLOYEES_MESSAGE = "There are no any employees in the organization";
   private static final String MORE_THAN_ONE_CEO_MESSAGE = "There should be exactly one CEO, but was %s. %s";
-  private static final String NON_UNIQUE_IDS_MESSAGE = "Employee Id must be empty, but it was not. Ids: %s";
+  private static final String NON_UNIQUE_IDS_MESSAGE = "Employee Id must be unique, but it was not. Ids: %s";
 
   public void validate(Collection<Employee> employees) {
     validateEmployeesNotEmpty(employees);
