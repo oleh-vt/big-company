@@ -2,6 +2,9 @@ package big.company.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import big.company.exception.BigCompanyApplicationException;
+import big.company.input.EmployeesFileInputReader;
+import big.company.output.impl.SystemStandardOutWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -10,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -51,7 +55,6 @@ class ApplicationTest {
           + "  ID    FIRST NAME     LAST NAME     REPORTING LINE EXCESS  " + NEW_LINE
           + "  17    FirstName17    LastName17    1                      " + NEW_LINE
           + NEW_LINE;
-  private final Application application = Initializer.initApplication();
 
   @TempDir
   private Path tempDir;
@@ -66,11 +69,30 @@ class ApplicationTest {
     System.setOut(systemStandardOut);
   }
 
+  @DisplayName("Should read the CSV file with employees and print the analysis reports")
   @Test
-  void runAnalysis() {
+  void shouldRunAnalysisAndPrintReport() {
+    Application application = Initializer.initApplication();
     prepareFile();
+
     application.runAnalysis(tempDir.resolve(FILE_NAME).toString());
+
     assertEquals(EXPECTED_OUTPUT, outputCaptor.toString());
+  }
+
+  @DisplayName("When application error occurs, should print error message")
+  @Test
+  void shouldPrintErrorMessageWhenApplicationErrorOccurs() {
+    String errorMessage = "error message";
+    EmployeesFileInputReader throwingInputReaderStub = path -> {
+      throw new BigCompanyApplicationException(errorMessage);
+    };
+    Application application = new Application(throwingInputReaderStub, employees -> null, report -> "", new SystemStandardOutWriter());
+    String expectedOutput = "Error: error message" + NEW_LINE;
+
+    application.runAnalysis("");
+
+    assertEquals(expectedOutput, outputCaptor.toString());
   }
 
   private void prepareFile() {
