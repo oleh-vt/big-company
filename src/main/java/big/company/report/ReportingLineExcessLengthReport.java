@@ -16,8 +16,8 @@ public final class ReportingLineExcessLengthReport {
     entries.add(new Entry(employeeId, firstName, lastName, reportingLineExcessLength));
   }
 
-  public PrintableReport export() {
-    return new PrintableReport(TITLE, createDataTable());
+  public ReportDto export() {
+    return new ReportDto(TITLE, createDataTable());
   }
 
   private Object[][] createDataTable() {

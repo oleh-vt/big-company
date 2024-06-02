@@ -1,9 +1,9 @@
 package big.company.output;
 
-import big.company.report.PrintableReport;
+import big.company.report.ReportDto;
 
 public interface OutputWriter {
 
-  void write(PrintableReport report);
+  void write(ReportDto report);
 
 }

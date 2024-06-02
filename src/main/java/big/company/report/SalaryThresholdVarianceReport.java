@@ -21,8 +21,8 @@ public final class SalaryThresholdVarianceReport {
     entries.add(new Entry(employeeId, firstName, lastName, salaryThresholdVariance));
   }
 
-  public PrintableReport export() {
-    return new PrintableReport(TITLE, createDataTable());
+  public ReportDto export() {
+    return new ReportDto(TITLE, createDataTable());
   }
 
 

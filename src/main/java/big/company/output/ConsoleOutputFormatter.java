@@ -1,9 +1,9 @@
 package big.company.output;
 
-import big.company.report.PrintableReport;
+import big.company.report.ReportDto;
 
 public interface ConsoleOutputFormatter {
 
-  String format(PrintableReport report);
+  String format(ReportDto report);
 
 }

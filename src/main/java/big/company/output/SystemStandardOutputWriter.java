@@ -1,6 +1,6 @@
 package big.company.output;
 
-import big.company.report.PrintableReport;
+import big.company.report.ReportDto;
 
 public class SystemStandardOutputWriter implements OutputWriter {
 
@@ -11,7 +11,7 @@ public class SystemStandardOutputWriter implements OutputWriter {
   }
 
   @Override
-  public void write(PrintableReport report) {
+  public void write(ReportDto report) {
     System.out.print(consoleOutputFormatter.format(report));
   }
 
