@@ -25,7 +25,7 @@ Write a simple program which will read the file and report:
   If you have any doubts make a sensible assumption and document it
 
 ### Implementation assumptions
-- there are exactly 5 columns
+- there are exactly 5 columns; fewer number of columns is treated as an error
 - the columns appear if the following order: Id, firstName, lastName, salary, managerId
 - the values for Id, firstName, lastName and salary are required, the managerId may be blank
 - the Id, salary and managerId are positive integer numbers
@@ -34,6 +34,7 @@ Write a simple program which will read the file and report:
 - an employee is a CEO if the employee does not have a manager
 - there can be exactly one CEO
 - an employee is a manager if the employee has subordinates
+- the manager id references existing employee in the file, otherwise it is treated as an error
 
 
 ### How to run

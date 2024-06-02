@@ -11,6 +11,8 @@ public class ConsoleTableOutputFormatter implements ConsoleOutputFormatter {
   private static final String NEW_LINE = "%n";
   private static final String BLANK_SPACE = "  ";
 
+  private static final String NO_CONTENT = "  <no content>" + System.lineSeparator();
+
   @Override
   public String format(ReportDto report) {
     return report.title()
@@ -20,9 +22,23 @@ public class ConsoleTableOutputFormatter implements ConsoleOutputFormatter {
 
   private String buildTablePresentation(Object[][] table) {
     String rowFormat = createRowFormat(calculateColumnWidths(table));
-    return Arrays.stream(table)
-        .map(rowFormat::formatted)
-        .collect(Collectors.joining());
+    String output = format(table, rowFormat);
+    if (!hasData(table)) {
+      return output + NO_CONTENT;
+    }
+    return output;
+  }
+
+  private String createRowFormat(int[] columnWidths) {
+    StringBuilder format = new StringBuilder();
+    for (int width : columnWidths) {
+      format.append(BLANK_SPACE)
+          .append(ALIGN_LEFT)
+          .append(width)
+          .append(STR)
+          .append(BLANK_SPACE);
+    }
+    return format.append(NEW_LINE).toString();
   }
 
   private int[] calculateColumnWidths(Object[][] table) {
@@ -36,16 +52,14 @@ public class ConsoleTableOutputFormatter implements ConsoleOutputFormatter {
     return columnWidths;
   }
 
-  private String createRowFormat(int[] columnWidths) {
-    StringBuilder format = new StringBuilder();
-    for (int width : columnWidths) {
-      format.append(BLANK_SPACE)
-          .append(ALIGN_LEFT)
-          .append(width)
-          .append(STR)
-          .append(BLANK_SPACE);
-    }
-    return format.append(NEW_LINE).toString();
+  private String format(Object[][] table, String rowFormat) {
+    return Arrays.stream(table)
+        .map(rowFormat::formatted)
+        .collect(Collectors.joining());
+  }
+
+  private boolean hasData(Object[][] table) {
+    return table.length > 1;
   }
 
 }
