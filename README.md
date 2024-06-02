@@ -38,3 +38,7 @@ Write a simple program which will read the file and report:
 
 
 ### How to run
+
+```
+java -jar big-company-1.0-SNAPSHOT.jar <absolute path to file>
+```
