@@ -2,6 +2,7 @@ package big.company.output;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import big.company.output.impl.ConsoleTableOutputFormatter;
 import big.company.report.ReportDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,8 @@
-package big.company.output;
+package big.company.output.impl;
 
+import big.company.output.ConsoleOutputFormatter;
+import big.company.output.ConsoleOutputWriter;
+import big.company.output.ReportOutputWriter;
 import big.company.report.ReportDto;
 
 public class SystemStandardOutputReportWriter implements ReportOutputWriter {
