@@ -1,9 +1,10 @@
-package big.company.input;
+package big.company.input.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import big.company.exception.BigCompanyApplicationException;
+import big.company.input.EmployeesFileInputReader;
 import big.company.organization.Employee;
 import java.io.IOException;
 import java.nio.file.Files;

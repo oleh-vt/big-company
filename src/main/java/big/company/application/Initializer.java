@@ -1,7 +1,7 @@
 package big.company.application;
 
-import big.company.input.EmployeesCsvParser;
-import big.company.input.EmployeesTextFileInputReader;
+import big.company.input.impl.EmployeesCsvParser;
+import big.company.input.impl.EmployeesTextFileInputReader;
 import big.company.organization.impl.BigCompanyEmployeesValidator;
 import big.company.organization.impl.BigCompanyOrgStructureBuilder;
 import big.company.output.impl.ConsoleTableOutputFormatter;

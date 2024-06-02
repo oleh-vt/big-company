@@ -1,6 +1,7 @@
-package big.company.input;
+package big.company.input.impl;
 
 import big.company.exception.BigCompanyApplicationException;
+import big.company.input.EmployeesParser;
 import big.company.organization.Employee;
 import java.util.List;
 
@@ -9,6 +10,9 @@ public class EmployeesCsvParser implements EmployeesParser {
   private static final int COLUMNS_NUMBER = 5;
   private static final String COMMA = ",";
   private static final int HEADER_LINES = 1;
+
+  private static final String INVALID_ROW_MESSAGE = "Row is invalid. Expected %d columns, but was %d";
+  private static final String REQUIRED_VALUE_MISSING_MESSAGE = "The value of column %d is missing";
 
   private static final class ColumnIndex {
 
@@ -46,14 +50,14 @@ public class EmployeesCsvParser implements EmployeesParser {
 
   private void validateRowComplete(String[] row) {
     if (row.length < COLUMNS_NUMBER) {
-      throw new BigCompanyApplicationException("Row is invalid. Expected %d columns, but was %d".formatted(COLUMNS_NUMBER, row.length));
+      throw new BigCompanyApplicationException(INVALID_ROW_MESSAGE.formatted(COLUMNS_NUMBER, row.length));
     }
   }
 
   private void validateRequiredFieldsSet(String[] row) {
     for (int i = 0; i < row.length; i++) {
       if (i != ColumnIndex.MANAGER_ID && row[i].isBlank()) {
-        throw new BigCompanyApplicationException("The value of column %d is missing".formatted(i + 1));
+        throw new BigCompanyApplicationException(REQUIRED_VALUE_MISSING_MESSAGE.formatted(i + 1));
       }
     }
   }

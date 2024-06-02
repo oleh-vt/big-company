@@ -1,8 +1,8 @@
-package big.company.output;
+package big.company.output.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import big.company.output.impl.ConsoleTableOutputFormatter;
+import big.company.output.ConsoleOutputFormatter;
 import big.company.report.ReportDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

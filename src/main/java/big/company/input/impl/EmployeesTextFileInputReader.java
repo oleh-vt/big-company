@@ -1,6 +1,8 @@
-package big.company.input;
+package big.company.input.impl;
 
 import big.company.exception.BigCompanyApplicationException;
+import big.company.input.EmployeesFileInputReader;
+import big.company.input.EmployeesParser;
 import big.company.organization.Employee;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,8 +11,8 @@ import java.util.List;
 
 public class EmployeesTextFileInputReader implements EmployeesFileInputReader {
 
-  public static final String FILE_NOT_EXIST_MESSAGE = "File does not exist: %s";
-  public static final String PATH_IS_DIRECTORY_MESSAGE = "The specified path should be a file, but was a directory: %s";
+  private static final String FILE_NOT_EXIST_MESSAGE = "File does not exist: %s";
+  private static final String PATH_IS_DIRECTORY_MESSAGE = "The specified path should be a file, but was a directory: %s";
   private final EmployeesParser employeesParser;
 
   public EmployeesTextFileInputReader(EmployeesParser employeesParser) {

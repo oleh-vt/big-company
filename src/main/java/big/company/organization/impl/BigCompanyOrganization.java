@@ -1,5 +1,6 @@
 package big.company.organization.impl;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.report.ReportingLineExcessLengthReport;
 import big.company.report.SalaryThresholdVarianceReport;
 import big.company.organization.Employee;
@@ -13,10 +14,13 @@ import java.util.Set;
 
 public class BigCompanyOrganization implements Organization {
 
-  private static final double SALARY_LOWER_THRESHOLD = 1.2;
-  private static final double SALARY_HIGHER_THRESHOLD = 1.5;
+  private static final double SALARY_LOWER_BOUND_MULTIPLIER = 1.2;
+  private static final double SALARY_UPPER_BOUND_MULTIPLIER = 1.5;
 
   private static final int MAX_REPORTING_LINE_LENGTH = 4;
+
+  private static final String CEO_NOT_FOUND_MESSAGE = "CEO is not found";
+  private static final String UNABLE_CALCULATE_AVERAGE_SALARY = "Cannot calculate average salaries for employee ids: %s";
 
   private final Map<Long, Employee> employeeById;
   private final Map<Long, Set<Long>> subordinatesByManager;
@@ -38,39 +42,42 @@ public class BigCompanyOrganization implements Organization {
     return report;
   }
 
-  private Optional<BigDecimal> calculateSalaryThresholdVariance(long managerId, long salary) {
-    return calculateVariance(salary,
-        calculateSubordinateAverageSalary(getSubordinateIds(managerId)));
+  @Override
+  public ReportingLineExcessLengthReport analyzeReportingLinesLength() {
+    var report = new ReportingLineExcessLengthReport();
+    analyze(getCeoId(), 0, report);
+    return report;
   }
 
   private Employee getEmployee(Long id) {
     return employeeById.get(id);
   }
 
-  // consider implementing this using range class that returns variance from the range
-  private Optional<BigDecimal> calculateVariance(long salary, double average) {
-    BigDecimal actualSalary = BigDecimal.valueOf(salary);
-    BigDecimal avg = BigDecimal.valueOf(average);
-    BigDecimal lowerBound = avg.multiply(BigDecimal.valueOf(SALARY_LOWER_THRESHOLD));
-    if (actualSalary.compareTo(lowerBound) < 0) {
-      return Optional.of(actualSalary.subtract(lowerBound));
-    }
-    BigDecimal upperBound = avg.multiply(BigDecimal.valueOf(SALARY_HIGHER_THRESHOLD));
-    if (actualSalary.compareTo(upperBound) > 0) {
-      return Optional.of(actualSalary.subtract(upperBound));
-    }
-    return Optional.empty();
+  private Optional<BigDecimal> calculateSalaryThresholdVariance(long managerId, long salary) {
+    BigDecimal average = calculateSubordinateAverageSalary(getSubordinateIds(managerId));
+    Range acceptableRange = computeAcceptableSalaryRange(average);
+    return acceptableRange.calculateVariance(BigDecimal.valueOf(salary));
   }
+
+  private BigDecimal calculateSubordinateAverageSalary(Set<Long> subordinateIds) {
+    return subordinateIds.stream()
+        .map(employeeById::get)
+        .mapToLong(Employee::salary)
+        .average()
+        .stream().mapToObj(BigDecimal::valueOf)
+        .findFirst()
+        .orElseThrow(() -> new BigCompanyApplicationException(UNABLE_CALCULATE_AVERAGE_SALARY.formatted(subordinateIds)));
+  }
+
+  private Range computeAcceptableSalaryRange(BigDecimal average) {
+    BigDecimal lowerBound = average.multiply(BigDecimal.valueOf(SALARY_LOWER_BOUND_MULTIPLIER));
+    BigDecimal upperBound = average.multiply(BigDecimal.valueOf(SALARY_UPPER_BOUND_MULTIPLIER));
+    return new Range(lowerBound, upperBound);
+  }
+
 
   private Set<Long> getSubordinateIds(Long managerId) {
     return subordinatesByManager.getOrDefault(managerId, Collections.emptySet());
-  }
-
-  @Override
-  public ReportingLineExcessLengthReport analyzeReportingLinesLength() {
-    var report = new ReportingLineExcessLengthReport();
-    analyze(getCeoId(), 0, report);
-    return report;
   }
 
   private void analyze(long id, int depth, ReportingLineExcessLengthReport report) {
@@ -88,18 +95,9 @@ public class BigCompanyOrganization implements Organization {
         .filter(e -> Objects.isNull(e.managerId()))
         .findFirst()
         .map(Employee::id)
-        .orElseThrow(() -> new IllegalStateException("CEO is not found"));
+        .orElseThrow(() -> new BigCompanyApplicationException(CEO_NOT_FOUND_MESSAGE));
   }
 
-
-  private double calculateSubordinateAverageSalary(Set<Long> subordinateIds) {
-    return subordinateIds.stream()
-        .map(employeeById::get)
-        .mapToLong(Employee::salary)
-        .average()
-        .orElseThrow(() -> new IllegalStateException(
-            "Cannot calculate average salaries for employee ids: " + subordinateIds));
-  }
 
   @Override
   public boolean equals(Object o) {
