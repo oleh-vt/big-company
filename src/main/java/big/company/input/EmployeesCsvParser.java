@@ -1,41 +1,38 @@
 package big.company.input;
 
 import big.company.organization.Employee;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
 
-public class CsvFileEmployeesInputReader implements EmployeesInputReader {
+public class EmployeesCsvParser implements EmployeesParser {
 
   private static final int COLUMNS_NUMBER = 5;
   private static final String COMMA = ",";
+  private static final int HEADER_LINES = 1;
+
+  private static final class ColumnIndex {
+
+    private static final int ID = 0;
+    private static final int FIRST_NAME = 1;
+    private static final int LAST_NAME = 2;
+    private static final int SALARY = 3;
+    private static final int MANAGER_ID = 4;
+
+  }
 
   @Override
-  public List<Employee> read(Path filePath) {
-    validateFile(filePath);
-    try (Stream<String> lines = Files.lines(filePath)) {
-      return lines
-          .filter(line -> !line.isBlank())
-          .skip(1)
-          .map(this::parseEmployeeDto)
-          .toList();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+  public List<Employee> parse(List<String> lines) {
+    return lines.stream()
+        .filter(line -> !line.isBlank())
+        .skip(HEADER_LINES)
+        .map(this::parseEmployee)
+        .toList();
   }
 
-  private void validateFile(Path filePath) {
-    if (Files.notExists(filePath)) {
-      throw new IllegalArgumentException("File does not exist: " + filePath);
-    }
-    if (Files.isDirectory(filePath)) {
-      throw new IllegalArgumentException("The specified path should be a file, but was a directory: " + filePath);
-    }
+  private Employee parse(String[] row) {
+    return new Employee(parseId(row), parseFirstName(row), parseLastName(row), parseSalary(row), parseManagerId(row));
   }
 
-  private Employee parseEmployeeDto(String csvRow) {
+  private Employee parseEmployee(String csvRow) {
     String[] row = csvRow.split(COMMA, -1);
     validate(row);
     return parse(row);
@@ -58,10 +55,6 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
         throw new IllegalStateException("The value of column %d is missing".formatted(i + 1));
       }
     }
-  }
-
-  private Employee parse(String[] row) {
-    return new Employee(parseId(row), parseFirstName(row), parseLastName(row), parseSalary(row), parseManagerId(row));
   }
 
   private long parseId(String[] row) {
@@ -87,15 +80,5 @@ public class CsvFileEmployeesInputReader implements EmployeesInputReader {
     }
     return Long.valueOf(managerIdRaw.strip());
   }
-
-  private static final class ColumnIndex {
-
-    private static final int ID = 0;
-    private static final int FIRST_NAME = 1;
-    private static final int LAST_NAME = 2;
-    private static final int SALARY = 3;
-    private static final int MANAGER_ID = 4;
-  }
-
 
 }

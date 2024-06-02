@@ -4,7 +4,7 @@ import big.company.organization.Employee;
 import java.nio.file.Path;
 import java.util.List;
 
-public interface EmployeesInputReader {
+public interface EmployeesFileInputReader {
 
   List<Employee> read(Path path);
 }
