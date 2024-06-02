@@ -2,7 +2,7 @@ package big.company.output;
 
 import big.company.report.ReportDto;
 
-public interface OutputWriter {
+public interface ReportOutputWriter {
 
   void write(ReportDto report);
 

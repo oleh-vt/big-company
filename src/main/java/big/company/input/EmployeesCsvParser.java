@@ -1,5 +1,6 @@
 package big.company.input;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.organization.Employee;
 import java.util.List;
 
@@ -45,14 +46,14 @@ public class EmployeesCsvParser implements EmployeesParser {
 
   private void validateRowComplete(String[] row) {
     if (row.length < COLUMNS_NUMBER) {
-      throw new IllegalStateException("Row is invalid. Expected %d columns, but was %d".formatted(COLUMNS_NUMBER, row.length));
+      throw new BigCompanyApplicationException("Row is invalid. Expected %d columns, but was %d".formatted(COLUMNS_NUMBER, row.length));
     }
   }
 
   private void validateRequiredFieldsSet(String[] row) {
     for (int i = 0; i < row.length; i++) {
       if (i != ColumnIndex.MANAGER_ID && row[i].isBlank()) {
-        throw new IllegalStateException("The value of column %d is missing".formatted(i + 1));
+        throw new BigCompanyApplicationException("The value of column %d is missing".formatted(i + 1));
       }
     }
   }

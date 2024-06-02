@@ -3,6 +3,7 @@ package big.company.organization.impl;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.organization.Employee;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ class BigCompanyEmployeesValidatorTest {
   @ParameterizedTest(name = "Employees == {arguments}")
   @NullAndEmptySource
   void shouldThrowExceptionWhenNoEmployees(List<Employee> employees) {
-    assertThrows(IllegalStateException.class, () -> bigCompanyEmployeesValidator.validate(employees));
+    assertThrows(BigCompanyApplicationException.class, () -> bigCompanyEmployeesValidator.validate(employees));
   }
 
   @DisplayName("When CEO is not exactly one, should throw an exception")
@@ -32,7 +33,7 @@ class BigCompanyEmployeesValidatorTest {
     for (int i = 0; i < numberOfCeos; i++) {
       employees.add(new Employee(i + 1L, "John", "Doe", 1000L, null));
     }
-    assertThrows(IllegalStateException.class, () -> bigCompanyEmployeesValidator.validate(employees));
+    assertThrows(BigCompanyApplicationException.class, () -> bigCompanyEmployeesValidator.validate(employees));
   }
 
   @DisplayName("When employee id is not unique, should throw an exception")
@@ -44,7 +45,7 @@ class BigCompanyEmployeesValidatorTest {
         new Employee(1L, "John3", "Doe", 1000L, 3L)
     );
 
-    assertThrows(IllegalStateException.class, () -> bigCompanyEmployeesValidator.validate(employees));
+    assertThrows(BigCompanyApplicationException.class, () -> bigCompanyEmployeesValidator.validate(employees));
   }
 
   @DisplayName("When employees present, only one CEO and employee ids are unique, should not throw exceptions")
@@ -68,7 +69,7 @@ class BigCompanyEmployeesValidatorTest {
         new Employee(3L, "John3", "Doe", 1000L, 1000L)
     );
 
-    assertThrows(IllegalStateException.class, () -> bigCompanyEmployeesValidator.validate(employees));
+    assertThrows(BigCompanyApplicationException.class, () -> bigCompanyEmployeesValidator.validate(employees));
   }
 
 

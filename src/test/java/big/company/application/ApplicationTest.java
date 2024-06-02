@@ -46,9 +46,11 @@ class ApplicationTest {
       "MANAGERS WHICH EARN LESS OR MORE THAN THEY SHOULD" + NEW_LINE
           + "  ID    FIRST NAME    LAST NAME    MISPAYMENT    VARIANCE  " + NEW_LINE
           + "  2     FirstName2    LastName2    Underpaid     200.0     " + NEW_LINE
+          + NEW_LINE
           + "EMPLOYEES WITH TOO LONG REPORTING LINE" + NEW_LINE
           + "  ID    FIRST NAME     LAST NAME     REPORTING LINE EXCESS  " + NEW_LINE
-          + "  17    FirstName17    LastName17    1                      " + NEW_LINE;
+          + "  17    FirstName17    LastName17    1                      " + NEW_LINE
+          + NEW_LINE;
   private final Application application = Initializer.initApplication();
 
   @TempDir

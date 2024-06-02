@@ -3,6 +3,7 @@ package big.company.input;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.organization.Employee;
 import java.util.Arrays;
 import java.util.List;
@@ -63,14 +64,14 @@ class EmployeesCsvParserTest {
     String csv = "id,firstName,lastName,salary".replace(requiredField, EMPTY);
     List<String> lines = prepareCsvFileContent(csv);
 
-    assertThrows(IllegalStateException.class, () -> employeesCsvParser.parse(lines));
+    assertThrows(BigCompanyApplicationException.class, () -> employeesCsvParser.parse(lines));
   }
 
   @DisplayName("When a row is incomplete, should throw an exception")
   @Test
   void shouldThrowExceptionWhenRowIsIncomplete() {
     List<String> lines = prepareCsvFileContent("123, Joe, Doe");
-    assertThrows(IllegalStateException.class, () -> employeesCsvParser.parse(lines));
+    assertThrows(BigCompanyApplicationException.class, () -> employeesCsvParser.parse(lines));
   }
 
   private List<String> prepareCsvFileContent(String... csvRows) {

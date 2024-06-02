@@ -1,12 +1,21 @@
 package big.company.organization.impl;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.organization.Employee;
 import big.company.organization.OrganizationEmployeesValidator;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BigCompanyEmployeesValidator implements OrganizationEmployeesValidator {
+
+  private static final String INVALID_MANAGER_ID_REFERENCE_MESSAGE = "Manager id does not reference any of the employees. Ids: %s";
+  private static final String NO_EMPLOYEES_MESSAGE = "There are no any employees in the organization";
+  private static final String MORE_THAN_ONE_CEO_MESSAGE = "There should be exactly one CEO, but was %s. %s";
+  private static final String NON_UNIQUE_IDS_MESSAGE = "Employee Id must be empty, but it was not. Ids: %s";
 
   public void validate(Collection<Employee> employees) {
     validateEmployeesNotEmpty(employees);
@@ -26,13 +35,13 @@ public class BigCompanyEmployeesValidator implements OrganizationEmployeesValida
         .filter(managerId -> !employeeIds.contains(managerId))
         .toList();
     if (!nonExistentManagerIds.isEmpty()) {
-      throw new IllegalStateException("Manager id does not reference any of the employees. Ids: " + nonExistentManagerIds);
+      throw new BigCompanyApplicationException(INVALID_MANAGER_ID_REFERENCE_MESSAGE.formatted(nonExistentManagerIds));
     }
   }
 
   private void validateEmployeesNotEmpty(Collection<Employee> employees) {
     if (employees == null || employees.isEmpty()) {
-      throw new IllegalStateException("There are no any employees in the organization");
+      throw new BigCompanyApplicationException(NO_EMPLOYEES_MESSAGE);
     }
   }
 
@@ -41,7 +50,7 @@ public class BigCompanyEmployeesValidator implements OrganizationEmployeesValida
         .filter(e -> Objects.isNull(e.managerId()))
         .toList();
     if (ceos.size() != 1) {
-      throw new IllegalStateException("There should be exactly one CEO, but was " + ceos.size() + ". " + ceos);
+      throw new BigCompanyApplicationException(MORE_THAN_ONE_CEO_MESSAGE.formatted(ceos.size(), ceos));
     }
   }
 
@@ -53,7 +62,7 @@ public class BigCompanyEmployeesValidator implements OrganizationEmployeesValida
         .map(Map.Entry::getKey)
         .toList();
     if (!nonUniqueIds.isEmpty()) {
-      throw new IllegalStateException("Employee Id must be empty, but it was not. Ids: " + nonUniqueIds);
+      throw new BigCompanyApplicationException(NON_UNIQUE_IDS_MESSAGE.formatted(nonUniqueIds));
     }
   }
 

@@ -3,6 +3,7 @@ package big.company.input;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import big.company.exception.BigCompanyApplicationException;
 import big.company.organization.Employee;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,13 +51,13 @@ class EmployeesTextFileInputReaderTest {
   void shouldThrowExceptionWhenFileNotExists() {
     Path nonExistingFile = tempDir.resolve("non_existing.csv");
 
-    assertThrows(IllegalArgumentException.class, () -> employeesFileInputReader.read(nonExistingFile));
+    assertThrows(BigCompanyApplicationException.class, () -> employeesFileInputReader.read(nonExistingFile));
   }
 
   @DisplayName("When the path is a directory, should throw an exception")
   @Test
   void shouldThrowExceptionWhenThePathIsDirectory() {
-    assertThrows(IllegalArgumentException.class, () -> employeesFileInputReader.read(tempDir));
+    assertThrows(BigCompanyApplicationException.class, () -> employeesFileInputReader.read(tempDir));
   }
 
   private void prepareFile(String csv) {
