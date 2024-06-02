@@ -6,7 +6,6 @@ import big.company.organization.impl.BigCompanyEmployeesValidator;
 import big.company.organization.impl.BigCompanyOrgStructureBuilder;
 import big.company.output.impl.ConsoleTableOutputFormatter;
 import big.company.output.impl.SystemStandardOutWriter;
-import big.company.output.impl.SystemStandardOutputReportWriter;
 
 public class Initializer {
 
@@ -16,9 +15,9 @@ public class Initializer {
   public static Application initApplication() {
     var employeesInputReader = new EmployeesTextFileInputReader(new EmployeesCsvParser());
     var orgStructureBuilder = new BigCompanyOrgStructureBuilder(new BigCompanyEmployeesValidator());
+    var consoleOutputFormatter = new ConsoleTableOutputFormatter();
     var consoleOutputWriter = new SystemStandardOutWriter();
-    var reportOutputWriter = new SystemStandardOutputReportWriter(new ConsoleTableOutputFormatter(), consoleOutputWriter);
 
-    return new Application(employeesInputReader, orgStructureBuilder, reportOutputWriter, consoleOutputWriter);
+    return new Application(employeesInputReader, orgStructureBuilder, consoleOutputFormatter, consoleOutputWriter);
   }
 }

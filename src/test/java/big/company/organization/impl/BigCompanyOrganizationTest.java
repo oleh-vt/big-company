@@ -2,9 +2,9 @@ package big.company.organization.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import big.company.organization.Employee;
 import big.company.report.ReportingLineExcessLengthReport;
 import big.company.report.SalaryThresholdVarianceReport;
-import big.company.organization.Employee;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ class BigCompanyOrganizationTest {
 
   @DisplayName("Should find managers whose salary is lesser than 20% from the direct subordinates' average")
   @Test
-  void analyzeManagerSalaries() {
+  void shouldFindAllManagersWhoseSalaryIsLowerThanLowerBound() {
     List<Employee> employees = createEmployees(new long[]{1100L, 1200L, 1000L, 800L});
 
     Map<Long, Set<Long>> orgStructure = Map.of(1L, Set.of(2L, 3L, 4L));
@@ -37,7 +37,7 @@ class BigCompanyOrganizationTest {
 
   @DisplayName("Should find managers whose salary is greater than 50% from the direct subordinates' average")
   @Test
-  void analyzeManagerSalaries2() {
+  void shouldFindAllManagersWhoseSalaryIsGreaterThanUpperBound() {
     List<Employee> employees = createEmployees(new long[]{1800L, 1200L, 1000L, 800L});
 
     Map<Long, Set<Long>> orgStructure = Map.of(1L, Set.of(2L, 3L, 4L));
@@ -54,7 +54,7 @@ class BigCompanyOrganizationTest {
   @DisplayName("When managers' salary is greater from the direct subordinates' average, but in inclusive range 20%-50%, should return empty report")
   @ParameterizedTest
   @ValueSource(longs = {1200L, 1350L, 1500L})
-  void analyzeManagerSalaries3(long managerSalary) {
+  void shouldReturnEmptyReportWhenManagerSalariesAreWithingCorrectRange(long managerSalary) {
     List<Employee> employees = createEmployees(new long[]{managerSalary, 1200, 1000L, 800});
 
     Map<Long, Set<Long>> orgStructure = Map.of(1L, Set.of(2L, 3L, 4L));
@@ -67,20 +67,9 @@ class BigCompanyOrganizationTest {
     assertEquals(expectedReport, actualReport);
   }
 
-  private List<Employee> createEmployees(long[] employeeSalaries) {
-    var firstName = "John";
-    var lastName = "Doe";
-    List<Employee> employees = new ArrayList<>(employeeSalaries.length);
-    for (int i = 0, id = 1; i < employeeSalaries.length; i++, id++) {
-      Long managerId = i == 0 ? null : 1L;
-      employees.add(new Employee((long) id, firstName + id, lastName, employeeSalaries[i], managerId));
-    }
-    return employees;
-  }
-
   @DisplayName("Should find all employees whose reporting line length is greater than 4")
   @Test
-  void analyzeStructure() {
+  void shouldFindAllEmployeesWhoseReportingLineIsGreaterThanFour() {
     Map<Long, Employee> employeesById = LongStream.rangeClosed(1, 10)
         .mapToObj(id -> new Employee(id, null, null, 0L, null))
         .collect(Collectors.toMap(Employee::id, Function.identity()));
@@ -101,5 +90,16 @@ class BigCompanyOrganizationTest {
 
     assertEquals(expectedReport, actualReport);
 
+  }
+
+  private List<Employee> createEmployees(long[] employeeSalaries) {
+    var firstName = "John";
+    var lastName = "Doe";
+    List<Employee> employees = new ArrayList<>(employeeSalaries.length);
+    for (int i = 0, id = 1; i < employeeSalaries.length; i++, id++) {
+      Long managerId = i == 0 ? null : 1L;
+      employees.add(new Employee((long) id, firstName + id, lastName, employeeSalaries[i], managerId));
+    }
+    return employees;
   }
 }

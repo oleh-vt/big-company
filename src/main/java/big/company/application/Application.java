@@ -4,8 +4,8 @@ import big.company.exception.BigCompanyApplicationException;
 import big.company.input.EmployeesFileInputReader;
 import big.company.organization.Organization;
 import big.company.organization.OrganizationStructureBuilder;
+import big.company.output.ConsoleOutputFormatter;
 import big.company.output.ConsoleOutputWriter;
-import big.company.output.ReportOutputWriter;
 import big.company.report.ReportingLineExcessLengthReport;
 import big.company.report.SalaryThresholdVarianceReport;
 import java.nio.file.Path;
@@ -16,18 +16,18 @@ public class Application {
 
   private final EmployeesFileInputReader employeesFileInputReader;
   private final OrganizationStructureBuilder orgStructureBuilder;
-  private final ReportOutputWriter reportOutputWriter;
+  private final ConsoleOutputFormatter consoleOutputFormatter;
   private final ConsoleOutputWriter consoleOutputWriter;
 
   public Application(
       EmployeesFileInputReader employeesFileInputReader,
       OrganizationStructureBuilder orgStructureBuilder,
-      ReportOutputWriter reportOutputWriter,
+      ConsoleOutputFormatter consoleOutputFormatter,
       ConsoleOutputWriter consoleOutputWriter
   ) {
     this.employeesFileInputReader = employeesFileInputReader;
     this.orgStructureBuilder = orgStructureBuilder;
-    this.reportOutputWriter = reportOutputWriter;
+    this.consoleOutputFormatter = consoleOutputFormatter;
     this.consoleOutputWriter = consoleOutputWriter;
   }
 
@@ -45,8 +45,8 @@ public class Application {
     SalaryThresholdVarianceReport managerSalaryVarianceReport = organization.analyzeManagerSalaries();
     ReportingLineExcessLengthReport reportingLineLengthExcessReport = organization.analyzeReportingLinesLength();
 
-    reportOutputWriter.write(managerSalaryVarianceReport.export());
-    reportOutputWriter.write(reportingLineLengthExcessReport.export());
+    consoleOutputWriter.write(consoleOutputFormatter.format(managerSalaryVarianceReport.export()));
+    consoleOutputWriter.write(consoleOutputFormatter.format(reportingLineLengthExcessReport.export()));
   }
 
 }
